@@ -1,0 +1,159 @@
+{
+  "name": "vs-dev-null",
+  "displayName": "vs-dev-null",
+  "description": "Browse dev-null.sh, the social network for developers, follow the people you follow, and commit to it without leaving the editor.",
+  "version": "0.1.0",
+  "publisher": "lucianofedericopereira",
+  "license": "MIT",
+  "icon": "images/icon.png",
+  "author": {
+    "name": "Luciano Federico Pereira",
+    "url": "https://github.com/lucianofedericopereira"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lucianofedericopereira/vs-dev-null.git"
+  },
+  "homepage": "https://github.com/lucianofedericopereira/vs-dev-null#readme",
+  "bugs": {
+    "url": "https://github.com/lucianofedericopereira/vs-dev-null/issues"
+  },
+  "engines": {
+    "vscode": "^1.96.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "dev-null",
+    "devnull",
+    "social",
+    "feed",
+    "developers"
+  ],
+  "galleryBanner": {
+    "color": "#16181d",
+    "theme": "dark"
+  },
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "devnull.openProfile",
+        "title": "Open Profile",
+        "category": "dev-null",
+        "icon": "$(account)"
+      },
+      {
+        "command": "devnull.openCommit",
+        "title": "Open Commit",
+        "category": "dev-null"
+      },
+      {
+        "command": "devnull.commit",
+        "title": "New Commit",
+        "category": "dev-null",
+        "icon": "$(edit)"
+      },
+      {
+        "command": "devnull.commitSelection",
+        "title": "Commit Selection",
+        "category": "dev-null"
+      },
+      {
+        "command": "devnull.setUsername",
+        "title": "Set Username",
+        "category": "dev-null"
+      },
+      {
+        "command": "devnull.refresh",
+        "title": "Refresh",
+        "category": "dev-null",
+        "icon": "$(refresh)"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "devnull",
+          "title": "dev-null",
+          "icon": "images/activity.svg"
+        }
+      ]
+    },
+    "views": {
+      "devnull": [
+        {
+          "type": "webview",
+          "id": "devnull.sidebar",
+          "name": "dev-null"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "devnull.commit",
+          "when": "view == devnull.sidebar",
+          "group": "navigation@1"
+        },
+        {
+          "command": "devnull.openProfile",
+          "when": "view == devnull.sidebar",
+          "group": "navigation@2"
+        },
+        {
+          "command": "devnull.refresh",
+          "when": "view == devnull.sidebar",
+          "group": "navigation@3"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "devnull.commitSelection",
+          "when": "editorHasSelection",
+          "group": "9_devnull"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "devnull.commitSelection",
+          "when": "editorHasSelection"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "dev-null",
+      "properties": {
+        "devnull.username": {
+          "type": "string",
+          "default": "",
+          "description": "Your dev-null.sh username: the profile opened by default and whose follows fill the sidebar."
+        },
+        "devnull.baseUrl": {
+          "type": "string",
+          "default": "https://dev-null.sh",
+          "description": "Base URL of the dev-null.sh instance."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "bundle": "esbuild src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --target=node20",
+    "build": "npm run bundle -- --sourcemap",
+    "watch": "npm run build -- --watch",
+    "lint": "tsc --noEmit",
+    "vscode:prepublish": "npm run bundle -- --minify",
+    "package": "vsce package",
+    "install:codium": "npm run package && NODE_OPTIONS=--no-deprecation codium --install-extension vs-dev-null-$npm_package_version.vsix --force",
+    "publish:ovsx": "ovsx publish vs-dev-null-$npm_package_version.vsix"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/vscode": "~1.96.0",
+    "@vscode/vsce": "^4.0.0",
+    "esbuild": "^0.28.2",
+    "ovsx": "^1.3.0",
+    "typescript": "^5.7.0"
+  }
+}
